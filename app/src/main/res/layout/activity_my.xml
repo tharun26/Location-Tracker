@@ -30,6 +30,8 @@
         android:layout_alignParentRight="true"
         android:src="@drawable/tracker"
         android:onClick="sendMessage"
+        style="?android:attr/borderlessButtonStyle"
         />
+
 </RelativeLayout>
 

@@ -2,9 +2,11 @@ package com.inspiron.tharun26.location;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Color;
@@ -13,6 +15,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.media.Image;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -27,14 +30,19 @@ import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import org.w3c.dom.Text;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+
 
 public class MyActivity extends Activity {
 
@@ -86,7 +94,14 @@ public class MyActivity extends Activity {
          final LocationListener locationListener=new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
+
                 updatelocation(location);
+                try {
+                    updatedatabase(location);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+
             }
 
             @Override
@@ -108,12 +123,22 @@ public class MyActivity extends Activity {
         locationManager.requestLocationUpdates(provider,1000,10,locationListener);
     }
 
-
+    public void updatedatabase(Location location) throws SQLException {
+        double lat=location.getLatitude();
+        double lon=location.getLongitude();
+        String lat1=""+lat;
+        String lon1=""+lon;
+        GPSDatabase myDatabase=new GPSDatabase(getApplicationContext());
+        myDatabase.open();
+        myDatabase.insertRows(lat1, lon1);
+        myDatabase.close();
+    }
     public void sendMessage(View view) {
 
-        Intent intent=new Intent(MyActivity.this,secondactivity.class);
+          Intent intent=new Intent(MyActivity.this,secondactivity.class);
         startActivity(intent);
         // Do something in response to button click
+
     }
 
 
@@ -147,12 +172,17 @@ public class MyActivity extends Activity {
         }
         latitude.setText(" " + lat);
         longitude.setText(" " + lon);
+      //  addDB(lat,lon);
     }
-    private void initmap() {
-        if (googleMap == null) {
+
+    private void initmap()
+    {
+        if (googleMap == null)
+        {
             googleMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
         }
     }
+
 
 }
 
