@@ -22,5 +22,14 @@
         android:id="@+id/longitude"
         android:layout_below="@id/latitude"
         />
+    <ImageButton
+        android:id="@+id/tracker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/tracker"
+        android:onClick="sendMessage"
+        />
 </RelativeLayout>
 
