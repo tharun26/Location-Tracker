@@ -14,15 +14,16 @@ import java.sql.SQLException;
 public class GPSDatabase {
     private Context context;
     private DbHelper dbHelper;
-    public final String DBNAME = "gps1";
-    public final int DBVERSION = 3;
+    public final String DBNAME = "gps2";
+    public final int DBVERSION = 4;
     public SQLiteDatabase db;
     public final String COLUMN2 = "latitude";
     public final String COLUMN3 = "longitude";
     public final String COLUMN1 = "locationId";
+    public final String COLUMN4= "address";
     public final String TABLENAME = "location";
-    public final String CREATERDB = "create table location(locationId integer primary key autoincrement,latitude text not null, longitude text not null);";
-
+    public final String CREATERDB = "create table location(locationId integer primary key autoincrement,latitude text not null, longitude text not null,address text not null);";
+    public final String DELETE="delete from location";
     public GPSDatabase(Context context) {
 
         this.context = context;
@@ -44,14 +45,20 @@ public class GPSDatabase {
             // TODO Auto-generated method stub
         }
     }
-    public long insertRows(String column2, String column3){
+    public long insertRows(String column2, String column3,String column4){
         ContentValues value=new ContentValues();
         value.put(COLUMN2, column2);
         value.put(COLUMN3, column3);
+        value.put(COLUMN4,column4);
         return db.insert(TABLENAME,null,value);
     }
+    public void deletedb()
+    {
+        db.execSQL(DELETE);
+    }
+
     public Cursor getAllRows(){
-        Cursor cursor=db.query(TABLENAME, new String[]{COLUMN1,COLUMN2,COLUMN3}, null,null, null, null, null);
+        Cursor cursor=db.query(TABLENAME, new String[]{COLUMN1,COLUMN2,COLUMN3,COLUMN4}, null,null, null, null, null);
         return cursor;
     }
     public void open() throws SQLException {

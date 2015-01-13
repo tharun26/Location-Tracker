@@ -37,7 +37,7 @@ public class secondactivity extends Activity {
         listContents = new ArrayList();
 
         for (int i = 0;i<cursor.getCount(); i++) {
-            listContents.add("Latitude=" +cursor.getString(1) +"  "+"\nLogitude="+ cursor.getString(2));
+            listContents.add("Latitude=" +cursor.getString(1) +"  "+"\nLogitude="+ cursor.getString(2)+" "+"\nAddress="+cursor.getString(3));
             cursor.moveToNext();
         }
 

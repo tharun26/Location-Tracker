@@ -10,7 +10,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Color;
+import android.location.Address;
 import android.location.Criteria;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -40,8 +42,11 @@ import android.widget.TextView;
 
 import org.w3c.dom.Text;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 
 public class MyActivity extends Activity {
@@ -97,7 +102,11 @@ public class MyActivity extends Activity {
 
                 updatelocation(location);
                 try {
-                    updatedatabase(location);
+                    try {
+                        updatedatabase(location);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
@@ -120,17 +129,37 @@ public class MyActivity extends Activity {
             }
         };
 
-        locationManager.requestLocationUpdates(provider,1000,10,locationListener);
+        locationManager.requestLocationUpdates(provider,3000,20,locationListener);
     }
 
-    public void updatedatabase(Location location) throws SQLException {
+    public void updatedatabase(Location location) throws SQLException, IOException {
+
         double lat=location.getLatitude();
         double lon=location.getLongitude();
         String lat1=""+lat;
         String lon1=""+lon;
+        String add="No Address";
+        Geocoder gc=new Geocoder(this, Locale.getDefault());
+
+        List<Address> addresses=gc.getFromLocation(lat,lon,1);
+        StringBuilder sb=new StringBuilder();
+        if(addresses.size()>0)
+        {
+            Address address=addresses.get(0);
+            for(int i=0;i<address.getMaxAddressLineIndex();i++)
+            {
+                sb.append(address.getAddressLine(i)).append("\n");
+                sb.append(address.getLocality()).append("\n");
+            }
+            add=sb.toString();
+
+        }
+
+
+
         GPSDatabase myDatabase=new GPSDatabase(getApplicationContext());
         myDatabase.open();
-        myDatabase.insertRows(lat1, lon1);
+        myDatabase.insertRows(lat1, lon1,add);
         myDatabase.close();
     }
     public void sendMessage(View view) {
@@ -139,6 +168,12 @@ public class MyActivity extends Activity {
         startActivity(intent);
         // Do something in response to button click
 
+    }
+    public void sendMessage1(View view) throws SQLException {
+        GPSDatabase myDatabase=new GPSDatabase(getApplicationContext());
+        myDatabase.open();
+        myDatabase.deletedb();
+        myDatabase.close();
     }
 
 

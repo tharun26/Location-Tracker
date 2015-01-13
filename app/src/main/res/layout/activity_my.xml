@@ -10,7 +10,10 @@
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.MapFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_alignBottom="@+id/tracker"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -32,6 +35,16 @@
         android:onClick="sendMessage"
         style="?android:attr/borderlessButtonStyle"
         />
+    <ImageButton
+        android:id="@+id/trash"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/trash"
+        android:onClick="sendMessage1"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_alignTop="@+id/tracker"
+        android:layout_toLeftOf="@+id/tracker"
+        android:layout_toStartOf="@+id/tracker" />
 
 </RelativeLayout>
 
